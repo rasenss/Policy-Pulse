@@ -1,0 +1,42 @@
+name: Auto Fetch Twitter Data
+
+on:
+  schedule:
+    # Jalankan setiap 6 jam (Bisa diganti sesuai kebutuhan)
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Agar bisa dijalankan manual tombol klik
+
+jobs:
+  laravel-fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2' # Sesuaikan versi PHP Anda
+        extensions: mbstring, bcmath, pdo, pdo_pgsql
+
+    - name: Install Dependencies
+      run: composer install --no-progress --prefer-dist
+
+    - name: Install Node.js & Puppeteer
+      run: |
+        npm install
+        npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+
+    - name: Run Twitter Scraper
+      env:
+        # Masukkan variabel ini di GitHub Secrets nanti
+        DB_CONNECTION: pgsql
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PORT: ${{ secrets.DB_PORT }}
+        DB_DATABASE: ${{ secrets.DB_DATABASE }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+        php artisan twitter:fetch

@@ -1,0 +1,53 @@
+/vendor
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/storage/logs/*
+
+# File Environment (PENTING: Jangan pernah upload ini)
+.env
+.env.backup
+.env.production
+
+# File System
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor Directories
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+
+# PHPUnit
+.phpunit.result.cache
+
+# NPM / Yarn
+npm-debug.log
+yarn-error.log
+
+# Laravel Specific
+auth.json
+
+# --- KHUSUS PROJECT POLICY PULSE ---
+# Jangan upload session Chrome (berat & rahasia)
+chrome_data/
+chrome_session/
+
+# Jangan upload cookies login Twitter (rahasia)
+twitter_cookies.json
+
+# Jangan upload virtual environment Python (jika pakai)
+venv/
+__pycache__/

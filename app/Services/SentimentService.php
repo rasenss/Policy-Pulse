@@ -7,64 +7,102 @@ use Sastrawi\Stemmer\StemmerFactory;
 class SentimentService
 {
     protected $stemmer;
+
+    // 1. BLACKLIST SPAM (Judol, Porno, Iklan, Link Aneh)
+    // Jika tweet mengandung ini, langsung BUANG.
+    protected $spamKeywords = [
+        // Judol & Slot
+        'gacor', 'slot', 'zeus', 'maxwin', 'pragmatic', 'hoki', 'depo', 'wd', 
+        'rtp', 'link bio', 'link di bio', 'situs', 'judi', 'bola88', 'bet', 
+        'scatter', 'bonanza', 'petir', 'jackpot', 'pola', 'receh',
+        
+        // Konten 18+ / Porno
+        '18+', 'bokep', 'video syur', 'link pemersatu', 'vcs', 'open bo', 
+        'video hot', 'video viral', 'full durasi', 'desah', 'montok', 'bugil', 
+        'colmek', 'kakek merah', 'lendir', 'wikwik', 'sange', 'crot',
+        
+        // Iklan Sampah
+        'peninggi', 'pelangsing', 'penggemuk', 'obat kuat', 'paid4link', 
+        'shopee', 'tokopedia', 'lazada', 'cek keranjang', 'racun shopee',
+        'affiliate', 'giveaway', 'followers', 'jual', 'promo',
+        
+        // Link Mencurigakan (Shortlink aneh)
+        'bit.ly', 't.me', 'wa.me', 'shorturl', 'paid4', 'linktre'
+    ];
     
     protected $slang = [
         'yg' => 'yang', 'ga' => 'tidak', 'gak' => 'tidak', 'engga' => 'tidak', 
-        'bgt' => 'sangat', 'banget' => 'sangat', 'sdh' => 'sudah', 'udh' => 'sudah', 
-        'dgn' => 'dengan', 'tdk' => 'tidak', 'blm' => 'belum', 'tau' => 'tahu', 
-        'klo' => 'kalau', 'krn' => 'karena', 'tp' => 'tapi', 'utk' => 'untuk', 
-        'jd' => 'jadi', 'bs' => 'bisa', 'skrg' => 'sekarang', 'sm' => 'sama', 
-        'nggak' => 'tidak', 'tak' => 'tidak', 'gajelas' => 'tidak jelas',
-        'ancur' => 'hancur', 'nyusahin' => 'menyusahkan', 'astagfirullah' => 'kecewa',
-        'ya allah' => 'keluhan', 'innalillahi' => 'berduka'
+        'bgt' => 'sangat', 'sdh' => 'sudah', 'udh' => 'sudah', 'dgn' => 'dengan', 
+        'tdk' => 'tidak', 'blm' => 'belum', 'tau' => 'tahu', 'klo' => 'kalau', 
+        'krn' => 'karena', 'tp' => 'tapi', 'utk' => 'untuk', 'jd' => 'jadi', 
+        'skrg' => 'sekarang', 'sm' => 'sama', 'nggak' => 'tidak', 'tak' => 'tidak',
+        'gajelas' => 'tidak jelas', 'ancur' => 'hancur', 'nyusahin' => 'menyusahkan',
+        'konoha' => 'indonesia buruk', // Mapping Satire
+        'wakanda' => 'indonesia buruk',
+        'prindavan' => 'indonesia buruk',
+        '+62' => 'indonesia'
     ];
 
     protected $lexicon = [
-        // Positif
+        // --- POSITIF ---
         'bagus' => 3, 'baik' => 2, 'setuju' => 3, 'dukung' => 3, 'sepakat' => 2, 
         'terima kasih' => 2, 'mantap' => 3, 'hebat' => 3, 'keren' => 3, 'maju' => 2, 
         'sukses' => 3, 'berhasil' => 3, 'tepat' => 2, 'solusi' => 3, 'bantu' => 2, 
-        'manfaat' => 2, 'lancar' => 2, 'optimis' => 2, 'gaspol' => 3, 'lanjut' => 2,
-        'bijak' => 3, 'cerdas' => 3, 'amanah' => 4, 'berkah' => 3, 'salut' => 3,
+        'amanah' => 4, 'berkah' => 3, 'salut' => 3, 'optimis' => 2, 'gaspol' => 3,
 
-        // Negatif (Umum)
+        // --- NEGATIF (Kritik & Emosi) ---
         'buruk' => -3, 'jelek' => -3, 'salah' => -3, 'bohong' => -4, 'tipu' => -4,
         'gagal' => -4, 'rusak' => -3, 'hancur' => -4, 'kacau' => -3, 'mundur' => -2,
         'tolak' => -4, 'lawan' => -4, 'protes' => -3, 'demo' => -3, 'ancam' => -3,
         'korupsi' => -5, 'maling' => -5, 'rampok' => -5, 'tindas' => -4, 'sengsara' => -4,
-        'susah' => -3, 'sulit' => -3, 'mahal' => -3, 'miskin' => -3, 'lapar' => -3,
-        'bingung' => -2, 'ribet' => -3, 'lambat' => -2, 'lelet' => -2, 'kecewa' => -4,
+        'susah' => -3, 'sulit' => -3, 'mahal' => -3, 'miskin' => -3, 'kecewa' => -4,
         'marah' => -4, 'benci' => -4, 'muak' => -4, 'jijik' => -4, 'takut' => -2,
+        'bodoh' => -4, 'goblok' => -5, 'tolol' => -5, 'idiot' => -5, 'dungu' => -4,
+        'gila' => -3, 'sinting' => -3, 'bangsat' => -5, 'bajingan' => -5, 'biadab' => -5,
         
-        // Negatif (Religius/Keluhan)
+        // --- KONTEKS SARKASME & POLITIK (Sesuai Request) ---
+        'konoha' => -3, // Sebutan sindiran untuk Indonesia
+        'wakanda' => -3, // Sebutan sindiran hukum tumpul
+        'dagelan' => -4, // Pemerintahan dianggap lelucon
+        'badut' => -4, // Pejabat dianggap badut
+        'waras' => -2, // "Masih waras?" = Negatif
+        'sehat' => -1, // "Lu sehat?" (Sarkas)
+        'kocak' => -3, // "Rezim kocak"
+        'lawak' => -3, // "Negara lawak"
+        'dongeng' => -3,
+        'drama' => -3,
+        
+        // Konteks Religius (Keluhan)
         'astagfirullah' => -3, 'istighfar' => -2, 'ya allah' => -2, 'innalillahi' => -3,
-        'zalim' => -5, 'laknat' => -5, 'dosa' => -3, 'azab' => -4, 'musibah' => -3,
-        
-        // Negatif (Konteks Palestina vs Israel)
-        'free' => -3, 'palestine' => -3, 'palestina' => -3, 'genocide' => -5, 
-        'genosida' => -5, 'penjajah' => -5, 'zionis' => -5, 'israel' => -2,
-        'boikot' => -4, 'save' => -2, 'rafah' => -3, 'ceasefire' => -3,
+        'zalim' => -5, 'laknat' => -5, 'dosa' => -3, 'azab' => -4,
+
+        // Palestina vs Israel (Penolakan Hubungan)
+        'israel' => -3, 'zionis' => -5, 'penjajah' => -5, 'genocide' => -5,
+        'genosida' => -5, 'boikot' => -4, 'free' => -2, 'palestine' => -3, 
+        'save' => -2, 'rafah' => -3
     ];
 
     protected $idioms = [
         'omong kosong' => -5,
+        'pintar berdalih' => -5,
         'tidak becus' => -5,
         'tidak guna' => -4,
         'kurang ajar' => -4,
-        'tidak masuk akal' => -4,
         'akal bulus' => -4,
         'pencitraan' => -4,
         'turunkan' => -4,
         'mundur aja' => -4,
-        'astagfirullah' => -3, 
-        'ya allah' => -2, 
-        'hasbunallah' => -3, 
-        'all eyes' => -3, 
+        'tidak waras' => -5,
+        'gak waras' => -5,
+        'masih waras' => -3, // Pertanyaan retoris "Masih waras?"
+        'negara konoha' => -4,
+        'pejabat konoha' => -4,
+        'negeri wakanda' => -4,
+        'all eyes' => -4,
         'free palestine' => -5,
-        'stop genocide' => -5,
     ];
 
-    protected $negations = ['tidak', 'bukan', 'jangan', 'tak', 'kurang', 'anti', 'stop', 'hentikan'];
+    protected $negations = ['tidak', 'bukan', 'jangan', 'tak', 'kurang', 'anti', 'stop', 'hentikan', 'gak'];
 
     public function __construct()
     {
@@ -74,24 +112,32 @@ class SentimentService
 
     public function analyze($text)
     {
-        $text = strtolower($text);
-        
-        // 1. Cek Hashtag Spesifik (Langsung vonis Negatif)
-        if (str_contains($text, '#freepalestine') || 
-            str_contains($text, '#alleyesonrafah') || 
-            str_contains($text, '#ceasefirenow')) {
+        $lowerText = strtolower($text);
+
+        // --- 1. FILTER SPAM (Judol, 18+, Link) ---
+        // Jika terdeteksi, kembalikan label SPAM agar dibuang oleh Controller
+        foreach ($this->spamKeywords as $spam) {
+            if (str_contains($lowerText, $spam)) {
+                return ['score' => 0, 'label' => 'spam'];
+            }
+        }
+
+        // --- 2. DETEKSI HASHTAG POLITIK ---
+        if (str_contains($lowerText, '#freepalestine') || 
+            str_contains($lowerText, '#alleyesonrafah') || 
+            str_contains($lowerText, '#tolak')) {
             return ['score' => -0.8, 'label' => 'negative'];
         }
 
-        // Bersihkan
-        $cleanText = preg_replace('/http\S+|www\S+|@\S+/', '', $text);
+        // Bersihkan teks
+        $cleanText = preg_replace('/http\S+|www\S+|@\S+/', '', $lowerText);
         $cleanText = preg_replace('/[^a-z0-9\s]/', ' ', $cleanText);
         $cleanText = preg_replace('/\s+/', ' ', $cleanText);
         $cleanText = trim($cleanText);
 
         $score = 0;
 
-        // 2. Cek Idiom
+        // --- 3. CEK IDIOM (Frasa Kuat) ---
         foreach ($this->idioms as $idiom => $val) {
             if (str_contains($cleanText, $idiom)) {
                 $score += $val;
@@ -99,7 +145,7 @@ class SentimentService
             }
         }
 
-        // 3. Cek Kata
+        // --- 4. CEK KATA (Lexicon) ---
         $words = explode(' ', $cleanText);
         $count = 0;
 
@@ -115,12 +161,19 @@ class SentimentService
             elseif (isset($this->lexicon[$stem])) $val = $this->lexicon[$stem];
 
             if ($val != 0) {
+                // Cek Negasi 2 kata ke belakang
                 if ($i > 0 && in_array($words[$i-1], $this->negations)) $val = -$val;
                 elseif ($i > 1 && in_array($words[$i-2], $this->negations)) $val = -$val;
                 
                 $score += $val;
                 $count++;
             }
+        }
+
+        // --- 5. LOGIKA KHUSUS SARKASME ---
+        // Jika ada kata "Konoha", "Wakanda", "Dagelan" -> Skor otomatis minus (Negatif)
+        if (str_contains($lowerText, 'konoha') || str_contains($lowerText, 'wakanda')) {
+            $score -= 2; 
         }
 
         $label = 'neutral';

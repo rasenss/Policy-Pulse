@@ -7,7 +7,7 @@ use App\Models\Policy;
 use App\Models\TweetData;
 use Faker\Factory as Faker;
 
-class GenerateEmergencyData extends Command
+class GenerateEmergencyData extends Commphp artisan migrate:fresh --seedand
 {
     // Nama perintah yang akan dipanggil di terminal
     protected $signature = 'twitter:emergency'; 

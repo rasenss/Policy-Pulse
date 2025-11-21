@@ -16,6 +16,9 @@
     <script type="module">
         import hotwiredTurbo from 'https://cdn.skypack.dev/@hotwired/turbo';
     </script>
+    <link rel="icon" type="image/png" href="{{ asset('img/2.png') }}" sizes="32x32">
+    <link rel="apple-touch-icon" href="{{ asset('img/logo2.png') }}">
+    <link rel="shortcut icon" href="{{ asset('img/logo2.png') }}">
 
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 24px 24px; }
@@ -42,13 +45,13 @@
                 <!-- LOGO (Kiri) -->
                 <a href="/" class="flex items-center gap-3 group cursor-pointer relative z-50">
                     <!-- Gambar 1.png -->
-                    <img src="{{ asset('img/1.png') }}" alt="Logo" class="w-10 h-10 md:w-12 md:h-12 rounded-xl shadow-lg object-contain bg-white p-1">
+                     <img src="{{ asset('img/logo1.png') }}" alt="Logo Utama" class="w-10 h-10 md:w-12 md:h-12 rounded-xl shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-500 object-contain bg-white p-1">
                     
                     <div class="flex flex-col">
                         <div class="flex items-center gap-2">
                             <span class="text-lg md:text-xl font-bold text-slate-900 tracking-tight">PolicyPulse</span>
                             <!-- Gambar 2.png (Kecil) -->
-                            <img src="{{ asset('img/2.png') }}" alt="Laravel" class="w-4 h-4 md:w-5 md:h-5 object-contain opacity-70">
+                            <img src="{{ asset('img/logo2.png') }}" alt="Laravel" class="w-4 h-4 md:w-5 md:h-5 object-contain opacity-70">
                         </div>
                         <span class="text-[9px] md:text-[10px] font-bold tracking-widest text-slate-400 uppercase hidden md:block">Riset Politik 2025</span>
                     </div>

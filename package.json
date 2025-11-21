@@ -3,7 +3,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
+       "build": "vite build && cp -r public/img public/build/img && cp public/img/* public/ && cp public/img/logo2.png public/favicon.ico",
+        "preview": "vite preview",
         "dev": "vite"
     },
     "devDependencies": {

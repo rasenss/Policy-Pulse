@@ -21,7 +21,7 @@ jobs:
 
     - name: Install Dependencies
       run: composer install --no-progress --prefer-dist
-
+      
     - name: Install Node.js & Puppeteer
       run: |
         npm install
@@ -29,17 +29,24 @@ jobs:
 
     - name: Run Twitter Scraper
       env:
-        # Mengambil kunci rahasia dari GitHub Settings
+        # PENTING: MENGGUNAKAN DB_URL UNTUK MENCEGAH PORT CORRUPTION
+        # DB_URL akan berisi semua variabel koneksi yang digabung.
+        # Format: postgresql://USER:PASS@HOST:PORT/DATABASE
+        DB_URL: postgresql://${{ secrets.DB_USERNAME }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_DATABASE }}
+        
+        # Variabel Lain (Diperlukan Laravel)
         DB_CONNECTION: pgsql
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DB_PORT: ${{ secrets.DB_PORT }}
-        DB_DATABASE: ${{ secrets.DB_DATABASE }}
-        DB_USERNAME: ${{ secrets.DB_USERNAME }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        # APP_KEY PENTING AGAR TIDAK ERROR
         APP_KEY: ${{ secrets.APP_KEY }} 
+        TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }} 
+        
       run: |
-        cp .env.example .env
-        # PENTING: Jangan jalankan migrate:fresh di sini agar Kuis tidak hilang!
-        # Cukup jalankan scraper saja.
+        # Membuat file .env dummy untuk GitHub Actions
+        touch .env
+        echo "APP_ENV=testing" >> .env
+        echo "APP_KEY=${{ env.APP_KEY }}" >> .env
+        echo "DB_CONNECTION=${{ env.DB_CONNECTION }}" >> .env
+        # Memasukkan URL koneksi lengkap
+        echo "DB_URL=${{ env.DB_URL }}" >> .env
+        
+        # Jalankan Scraper
         php artisan twitter:fetch

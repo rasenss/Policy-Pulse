@@ -1,4 +1,4 @@
-#!/usr/bin/env php
+php artisan db:seed --class=PolicySeeder#!/usr/bin/env php
 <?php
 
 use Illuminate\Foundation\Application;

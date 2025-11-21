@@ -3,8 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build && mkdir -p public/build/img && cp -r public/img/* public/build/img/ && cp public/img/logo2.png public/favicon.ico",
-        "dev": "vite"
+       "build": "vite build && cp public/1.png public/build/logo1.png && cp public/logo2.png public/build/logo2.png && cp public/logo2.png public/favicon.ico",
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",

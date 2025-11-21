@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PolicyPulse | Analisis Sentimen 2025</title>
     
-    <!-- Kita pakai fungsi asset() yang sudah kita paksa copy di package.json -->
+    <!-- FAVICON - Menggunakan logo2.png -->
     <link rel="icon" type="image/png" href="{{ asset('logo2.png') }}">
     <link rel="shortcut icon" href="{{ asset('logo2.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('logo2.png') }}">
@@ -50,18 +50,18 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 
-                <!-- LOGO (1.png dan 2.png) -->
+                <!-- LOGO (Sinkronisasi Nama) -->
                 <a href="/" class="flex items-center gap-4 group cursor-pointer relative z-50">
                     
-                    <!-- LOGO UTAMA (1.png) - UKURAN LEBIH BESAR UNTUK TAMPILAN JELAS -->
+                    <!-- LOGO UTAMA (logo1.png) -->
                     <img src="{{ asset('logo1.png') }}" alt="Logo Utama" 
-                         class="w-10 h-10 md:w-12 md:h-12 rounded-xl shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-500 object-contain bg-white p-1">
+                         class="w-10 h-10 md:w-12 md:h-12 rounded-xl shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform duration-500 object-contain bg-white p-1">
                     
                     <div class="flex flex-col">
                         <div class="flex items-center gap-2">
                             <span class="text-lg md:text-xl font-bold text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors">PolicyPulse</span>
                             
-                            <!-- LOGO KECIL (2.png) -->
+                            <!-- LOGO KECIL (logo2.png) -->
                             <img src="{{ asset('logo2.png') }}" alt="Laravel Logo" class="w-4 h-4 md:w-5 md:h-5 object-contain opacity-70">
                         </div>
                         <span class="text-[9px] md:text-[10px] font-bold tracking-widest text-slate-400 uppercase hidden md:block">Riset Politik 2025</span>

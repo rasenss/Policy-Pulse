@@ -2,9 +2,9 @@ name: Auto Fetch Twitter Data
 
 on:
   schedule:
-    # Jalankan setiap 6 jam (Bisa diganti sesuai kebutuhan)
+    # Jalankan setiap 6 jam sekali
     - cron: '0 */6 * * *'
-  workflow_dispatch: # Agar bisa dijalankan manual tombol klik
+  workflow_dispatch: # Agar bisa dijalankan manual lewat tombol di GitHub
 
 jobs:
   laravel-fetch:
@@ -16,7 +16,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2' # Sesuaikan versi PHP Anda
+        php-version: '8.2'
         extensions: mbstring, bcmath, pdo, pdo_pgsql
 
     - name: Install Dependencies
@@ -29,14 +29,17 @@ jobs:
 
     - name: Run Twitter Scraper
       env:
-        # Masukkan variabel ini di GitHub Secrets nanti
+        # Mengambil kunci rahasia dari GitHub Settings
         DB_CONNECTION: pgsql
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
         DB_DATABASE: ${{ secrets.DB_DATABASE }}
         DB_USERNAME: ${{ secrets.DB_USERNAME }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        # APP_KEY PENTING AGAR TIDAK ERROR
+        APP_KEY: ${{ secrets.APP_KEY }} 
       run: |
         cp .env.example .env
-        php artisan key:generate
+        # PENTING: Jangan jalankan migrate:fresh di sini agar Kuis tidak hilang!
+        # Cukup jalankan scraper saja.
         php artisan twitter:fetch

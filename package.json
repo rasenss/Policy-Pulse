@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp public/logo1.png public/build/logo1.png && cp public/logo2.png public/build/logo2.png && cp public/logo2.png public/favicon.ico"
+    "build": "vite build"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",

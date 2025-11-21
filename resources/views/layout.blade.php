@@ -36,7 +36,7 @@
     </style>
 </head>
 <body class="text-slate-600 antialiased flex flex-col min-h-screen selection:bg-blue-100 selection:text-blue-700">
-
+    
     <!-- NAVBAR (Updated dengan Mobile Menu) -->
     <nav x-data="{ scrolled: false, mobileOpen: false }" 
          @scroll.window="scrolled = (window.pageYOffset > 20)"
@@ -48,10 +48,8 @@
             <div class="flex justify-between items-center h-20">
                 
                 <!-- Logo -->
-                <a href="/" class="flex items-center gap-3 group cursor-pointer relative z-50">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 group-hover:rotate-6 transition-transform duration-500">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                    </div>
+                <a href="/2.png" class="flex items-center gap-3 group cursor-pointer relative z-50">
+                    <img src="{{ asset('/1.png') }}" alt="Logo PolicyPulse" class="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-300">
                     <div>
                         <span class="block text-xl font-bold text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors">PolicyPulse</span>
                         <span class="block text-[10px] font-bold tracking-widest text-slate-400 uppercase">Riset Politik 2025</span>

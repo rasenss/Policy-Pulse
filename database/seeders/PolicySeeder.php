@@ -14,54 +14,54 @@ class PolicySeeder extends Seeder
         // 1. Matikan pengecekan Foreign Key sementara (agar bisa hapus bersih)
         Schema::disableForeignKeyConstraints();
 
-        // 2. Hapus Data Lama (Tweet & Kebijakan) agar tidak tercampur
+        // 2. Hapus Data Lama (Tweet & Kebijakan)
         TweetData::truncate();
         Policy::truncate();
 
         // 3. Nyalakan lagi pengecekannya
         Schema::enableForeignKeyConstraints();
 
-        // 4. Data Berita Baru (Berdasarkan Request User)
+        // 4. Data Berita Baru (Sesuai Request Spesifik)
         $policies = [
             [
-                'title' => 'Larangan Penjualan Elpiji 3 Kg oleh Pengecer',
-                'description' => 'Kebijakan Energi Subsidi yang diterapkan 1 Januari 2025 namun dibatalkan total pada 4 Februari 2025 setelah menuai protes keras akibat kelangkaan.',
+                'title' => 'Larangan Penjualan LPG 3 Kg Eceran',
+                'description' => 'Diterapkan 1 Januari 2025 dan dibatalkan 4 Februari 2025. Memicu kelangkaan parah, antrean panjang hingga korban jiwa lansia, dan lonjakan harga pasar gelap.',
                 'source_link' => 'https://x.com/intinyadeh/status/1886410377803829491',
-                'target_tweet_id' => '1886410377803829491', // Sumber Viral (35k likes)
+                'target_tweet_id' => '1886410377803829491', // Viral: 2.3 Juta Views
                 'category' => 'Energi & Ekonomi',
                 'date_issued' => '2025-01-01',
             ],
             [
-                'title' => 'Pemangkasan APBN Rp306,6 Triliun (Inpres No. 1/2025)',
-                'description' => 'Kebijakan Fiskal untuk efisiensi anggaran yang berdampak pada PHK massal tenaga honorer. Viral karena kritik keras dari masyarakat terdampak.',
+                'title' => 'Pemangkasan APBN Rp306,6 Triliun (Inpres 1/2025)',
+                'description' => 'Efisiensi anggaran ekstrem mulai 22 Januari 2025. Mengakibatkan PHK massal tenaga honorer dan pemotongan tunjangan ASN yang berdampak pada layanan publik.',
                 'source_link' => 'https://x.com/txtdrorgmiskin/status/1897870354313625761',
-                'target_tweet_id' => '1897870354313625761', // Sumber Viral (53k likes)
-                'category' => 'Ekonomi Makro',
+                'target_tweet_id' => '1897870354313625761', // Viral: Kritik PHK Honorer
+                'category' => 'Fiskal & Ekonomi',
                 'date_issued' => '2025-01-22',
             ],
             [
-                'title' => 'Revisi UU TNI (UU No. 3/2025) – Dwifungsi & Jabatan Sipil',
-                'description' => 'Kebijakan Pertahanan yang disahkan 26 Maret 2025. Memicu kontroversi besar terkait kembalinya peran militer dalam jabatan sipil (Dwifungsi).',
-                'source_link' => 'https://x.com/PBHI_Nasional/status/1902565309812498779',
-                'target_tweet_id' => '1902565309812498779', // Sumber Viral Breaking News (98k likes)
+                'title' => 'Revisi & Pengesahan UU TNI (Dwifungsi)',
+                'description' => 'Disahkan kilat pada 26 Maret 2025. Mengizinkan TNI menduduki jabatan sipil, memicu tuduhan kembalinya Dwifungsi ABRI dan demo nasional #TolakRUUTNI.',
+                'source_link' => 'https://x.com/barengwarga/status/1901206104186491346',
+                'target_tweet_id' => '1901206104186491346', // Viral: 11 Juta Views
                 'category' => 'Politik & Hukum',
                 'date_issued' => '2025-03-26',
             ],
             [
-                'title' => 'Pencabutan Izin Tambang Nikel di Raja Ampat',
-                'description' => 'Kebijakan Lingkungan tegas pada 10 Juni 2025. Izin tambang dicabut total setelah viralnya kerusakan alam di kawasan wisata prioritas.',
-                'source_link' => 'https://x.com/AnggiCartwheel/status/1930502426551091477',
-                'target_tweet_id' => '1930502426551091477', // Sumber Viral Before-After (68k likes)
-                'category' => 'Lingkungan',
-                'date_issued' => '2025-06-10',
+                'title' => 'Program Makan Bergizi Gratis (MBG) - Keracunan Massal',
+                'description' => 'Dimulai 6 Januari 2025. Diwarnai skandal menu tak layak, anggaran bengkak >Rp300 T, dan lebih dari 3.000 kasus keracunan makanan (KLB) di berbagai daerah.',
+                'source_link' => 'https://x.com/knpharuspeduli/status/1886773944457552268',
+                'target_tweet_id' => '1886773944457552268', // Viral: Kasus Keracunan
+                'category' => 'Kesehatan & Sosial',
+                'date_issued' => '2025-01-06',
             ],
             [
-                'title' => 'Peluang Diplomasi Israel "Jika Palestina Diakui"',
-                'description' => 'Kebijakan Luar Negeri kontroversial yang disampaikan Mei 2025. Pemerintah membuka opsi hubungan dengan Israel dengan syarat pengakuan Palestina.',
+                'title' => 'Pembukaan Peluang Diplomasi Israel',
+                'description' => 'Pernyataan resmi pemerintah pada Mei 2025 untuk membuka hubungan diplomatik dengan syarat. Memicu kemarahan publik dan dianggap pengkhianatan konstitusi.',
                 'source_link' => 'https://x.com/tempodotco/status/1927641433080537416',
-                'target_tweet_id' => '1927641433080537416', // Sumber Viral Debat Nasional (24k likes)
+                'target_tweet_id' => '1927641433080537416', // Viral: Debat Nasional (17.7 Juta Views)
                 'category' => 'Luar Negeri',
-                'date_issued' => '2025-05-15',
+                'date_issued' => '2025-05-20',
             ],
         ];
 

@@ -19,21 +19,10 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     
-    public function boot(): void
+     public function boot(): void
     {
-         if (env('VERCEL_ENV') === 'production') {
-            $vercelUrl = env('APP_URL');
-            if (!$vercelUrl) {
-                // Fallback menggunakan VERCEL_URL bawaan
-                $vercelUrl = 'https://' . env('VERCEL_URL');
-            }
-            URL::forceRootUrl($vercelUrl);
-            $this->app['url']->forceScheme('https');
-        }
-        
-        // Memastikan APP_URL dipakai untuk aset (perbaikan terakhir)
-        if (env('APP_URL')) {
-             $this->app['url']->assetRoot(env('APP_URL'));
+        if ($this->app->environment('production') || env('VERCEL')) {
+            URL::forceScheme('https');
         }
     }
 }
